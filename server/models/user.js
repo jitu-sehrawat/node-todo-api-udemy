@@ -38,7 +38,10 @@ UserSchema.methods.toJSON = function () {
   var user = this;
   var userObject = user.toObject();
 
-  return _.pick(userObject, ['_id', 'email']);
+  // Adding Token to res.body.token incase we need to send token in response Body
+  userObject.token = userObject.tokens[userObject.tokens.length - 1].token;
+
+  return _.pick(userObject, ['_id', 'email', `token`]);
 };
 
 // Schema methods
