@@ -33,6 +33,7 @@ var UserSchema = new mongoose.Schema({
   }]
 });
 
+// Schema methods
 UserSchema.methods.toJSON = function () {
   var user = this;
   var userObject = user.toObject();
@@ -52,6 +53,19 @@ UserSchema.methods.generateAuthToken = function () {
     return token;
   });
 };
+
+// Schema methods
+UserSchema.methods.removeToken = function (token) {
+  let user = this;  console.log(this);
+
+  return user.update({
+    $pull: {
+      tokens: {
+        token: token
+      }
+    }
+  })
+}
 
 // Model methods
 UserSchema.statics.findByToken = function (token) {
@@ -74,6 +88,7 @@ UserSchema.statics.findByToken = function (token) {
   })
 };
 
+// Model methods
 UserSchema.statics.findByCredentials = function (email, password) {
   let User = this;
 
