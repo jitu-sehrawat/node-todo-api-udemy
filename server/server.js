@@ -3,7 +3,6 @@ require('./config/config');
 const _ = require('lodash');
 const express = require('express');
 const bodyParser = require('body-parser');
-const cors = require('cors')
 const { ObjectID } = require('mongodb');
 
 const { mongoose }= require('./db/mongoose');
@@ -14,17 +13,6 @@ const { authenticate } = require('./middleware/authenticate');
 const app = express();
 const port = process.env.PORT || 3000;
 
-var corsOptions = {
-  exposedHeaders: ['x-auth'],
-  allowedHeaders: ['*']
-}
-
-// app.use((req, res, next) => {
-//   console.log(`REQ : ${JSON.stringify(req.headers, null, 2)}`);
-//   next();
-// })
-
-app.use(cors(corsOptions));
 app.use(bodyParser.json());
 
 app.post('/todos', authenticate, (req, res) => {
