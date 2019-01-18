@@ -45,53 +45,60 @@ UserSchema.methods.toJSON = function () {
 };
 
 // Schema methods
-UserSchema.methods.generateAuthToken = function () {
-  var user = this;
-  var access = 'auth';
-  var token = jwt.sign({_id: user._id.toHexString(), access}, process.env.JWT_SECRET).toString();
+UserSchema.methods.generateAuthToken = async function () {
+  let user = this;
+  let access = 'auth';
+  let token = jwt.sign({_id: user._id.toHexString(), access}, process.env.JWT_SECRET).toString();
 
   user.tokens.push({access, token});
-
-  return user.save().then(() => {
-    return token;
-  });
+  await user.save();
+  return token;
 };
 
 // Schema methods
-UserSchema.methods.removeToken = function (token) {
+UserSchema.methods.removeToken = async function (token) {
   let user = this;
 
-  return user.update({
-    $pull: {
-      tokens: {
-        token: token
+  try {
+    let user = await user.update({
+      $pull: {
+        tokens: {
+          token: token
+        }
       }
-    }
-  })
-}
+    });
+    return user;
+  } catch (e) {
+    throw new Error(e);
+  }
+};
+
 
 // Model methods
-UserSchema.statics.findByToken = function (token) {
+UserSchema.statics.findByToken = async function (token) {
   let User = this;
   let decoded;
 
   try {
     decoded = jwt.verify(token, process.env.JWT_SECRET);
   } catch (e) {
-    // return new Promise((resolve, reject) => {
-    //   reject();
-    // });
-    return Promise.reject(e);
+    throw new Error(e);
   }
 
-  return User.findOne({
-    _id: decoded._id,
-    'tokens.token': token,
-    'tokens.access': 'auth'
-  })
+  try {
+    let user = await User.findOne({
+      _id: decoded._id,
+      'tokens.token': token,
+      'tokens.access': 'auth'
+    });
+    return user;
+  } catch (e) {
+    throw new Error(e);
+  }
 };
 
 // Model methods
+// bcrypt hasging does not support promises. So does not async-await
 UserSchema.statics.findByCredentials = function (email, password) {
   let User = this;
 
@@ -108,6 +115,7 @@ UserSchema.statics.findByCredentials = function (email, password) {
   })
 }
 
+// bcrypt hasging does not support promises. So does not async-await
 UserSchema.pre('save', function (next) {
   let user = this;
 
