@@ -36,23 +36,19 @@ const todos = [{
   _creator: userTwoId
 }];
 
-const populateUsers = (done) => {
-  User.deleteMany({}).then(() => {
-    let userOne = new User(users[0]).save();  // Will hit pre 'save' hook
-    let userTwo = new User(users[1]).save();
+const populateUsers = async () => {
+  await User.deleteMany({});
+  await new User(users[0]).save();
+  await new User(users[1]).save();
 
-    return Promise.all([userOne, userTwo]) 
-  }).then(() => {
-    done();
-  })
+  // No need to return done() or Promise.resolve if using async-await
 };
 
-const populateTodos = (done) => {
-  Todo.deleteMany({}).then(() => {
-    return Todo.insertMany(todos);
-  }).then(() => {
-    done();
-  });
+const populateTodos = async () => {
+  await Todo.deleteMany({});
+  await Todo.insertMany(todos);
+  
+  // No need to return done() or Promise.resolve if using async-await
 };
 
 module.exports = {
