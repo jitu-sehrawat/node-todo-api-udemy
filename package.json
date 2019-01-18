@@ -19,11 +19,13 @@
     "chalk": "^2.4.2",
     "cors": "^2.8.5",
     "express": "^4.16.4",
+    "express-winston": "^3.0.1",
     "jsonwebtoken": "^8.4.0",
     "lodash": "^4.17.11",
     "mongodb": "^3.1.10",
     "mongoose": "^5.4.3",
-    "validator": "^10.10.0"
+    "validator": "^10.10.0",
+    "winston": "^3.1.0"
   },
   "devDependencies": {
     "expect": "^23.6.0",

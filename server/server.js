@@ -5,6 +5,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const { ObjectID } = require('mongodb');
 
+const { logger } = require('./config/logger');
 const { mongoose }= require('./db/mongoose');
 const { Todo } = require('./models/todo');
 const { User } = require('./models/user');
@@ -14,6 +15,7 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
+app.use(logger)
 
 app.post('/todos', authenticate, async (req, res) => {
   let todo = new Todo({
