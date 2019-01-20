@@ -8,14 +8,16 @@ const { ObjectID } = require('mongodb');
 const { logger } = require('./config/logger');
 const { mongoose }= require('./db/mongoose');
 const { Todo } = require('./models/todo');
-const { User } = require('./models/user');
+// const { User } = require('./models/user');
 const { authenticate } = require('./middleware/authenticate');
+const userRoute = require('./users/route');
 
 const app = express();
 const port = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
-app.use(logger)
+// app.use(logger)
+
 
 app.post('/todos', authenticate, async (req, res) => {
   let todo = new Todo({
@@ -108,46 +110,48 @@ app.put(`/todos/:id`, authenticate, async (req, res) => {
   }
 });
 
+app.use('/users', userRoute);
 
-// POST /users
-app.post('/users', async (req, res) => {
-  try {
-    const body = _.pick(req.body, ['email', 'password']);
-    const user = new User(body);
-    await user.save();
-    const token = user.generateAuthToken();
-    res.header('x-auth', token).send(user);  
-  } catch (e) {
-    res.status(400).send(e);  
-  }
-});
 
-app.get(`/users/me`, authenticate, (req, res) => {
-  res.send(req.user);
-})
+// // POST /users
+// app.post('/users', async (req, res) => {
+//   try {
+//     const body = _.pick(req.body, ['email', 'password']);
+//     const user = new User(body);
+//     await user.save();
+//     const token = user.generateAuthToken();
+//     res.header('x-auth', token).send(user);  
+//   } catch (e) {
+//     res.status(400).send(e);  
+//   }
+// });
 
-// POST /users/login
-app.post(`/users/login`, async (req, res) => {
-  try {
-    const body = _.pick(req.body, ['email', 'password']);
-    const user = await User.findByCredentials(body.email, body.password);
-    const token = await user.generateAuthToken();
-    res.header('x-auth', token).send(user);  
-  } catch (e) {
-    res.status(400).send();  
-  }
-}); 
+// app.get(`/users/me`, authenticate, (req, res) => {
+//   res.send(req.user);
+// })
 
-app.delete(`/users/me/token`, authenticate, async (req, res) => {
-  try {
-    let user = new User(req.user);
+// // POST /users/login
+// app.post(`/users/login`, async (req, res) => {
+//   try {
+//     const body = _.pick(req.body, ['email', 'password']);
+//     const user = await User.findByCredentials(body.email, body.password);
+//     const token = await user.generateAuthToken();
+//     res.header('x-auth', token).send(user);  
+//   } catch (e) {
+//     res.status(400).send();  
+//   }
+// }); 
 
-    await user.removeToken(req.token);
-    res.status(200).send();
-  } catch (e) {
-    res.status(400).send();  
-  }
-})
+// app.delete(`/users/me/token`, authenticate, async (req, res) => {
+//   try {
+//     let user = new User(req.user);
+
+//     await user.removeToken(req.token);
+//     res.status(200).send();
+//   } catch (e) {
+//     res.status(400).send();  
+//   }
+// })
 
 app.listen(port, () => {
   console.log(`Started up at port ${port} \n\n\n`)
