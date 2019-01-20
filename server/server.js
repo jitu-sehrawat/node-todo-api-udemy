@@ -4,6 +4,9 @@ require('./db/mongoose');
 const _ = require('lodash');
 const express = require('express');
 const bodyParser = require('body-parser');
+const methodOverride = require('method-override');
+const compression = require('compression');
+const helmet = require('helmet');
 
 const { logger } = require('./config/logger');
 const todoRoute = require('./todos/route');
@@ -13,6 +16,9 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
+app.use(methodOverride());
+app.use(compression());
+app.use(helmet());
 // app.use(logger)
 
 // Routes
