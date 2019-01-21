@@ -1,7 +1,6 @@
 require('./config/config');
 require('./db/mongoose');
 
-const _ = require('lodash');
 const express = require('express');
 const bodyParser = require('body-parser');
 const methodOverride = require('method-override');
@@ -19,14 +18,14 @@ app.use(bodyParser.json());
 app.use(methodOverride());
 app.use(compression());
 app.use(helmet());
-// app.use(logger)
+app.use(logger);
 
 // Routes
 app.use('/todos', todoRoute);
 app.use('/users', userRoute);
 
 app.listen(port, () => {
-  console.log(`Started up at port ${port} \n\n\n`)
+  console.log(`Started up at port ${port} \n`);
 });
 
 module.exports = {

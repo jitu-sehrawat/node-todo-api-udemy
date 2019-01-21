@@ -12,7 +12,7 @@ const users = [{
   password: 'userOnePass',
   tokens: [{
     access: 'auth',
-    token: jwt.sign({_id: userOneId, access: 'auth' }, process.env.JWT_SECRET).toString()
+    token: jwt.sign({ _id: userOneId, access: 'auth' }, process.env.JWT_SECRET).toString()
   }]
 }, {
   _id: userTwoId,
@@ -20,7 +20,7 @@ const users = [{
   password: 'userTwoPass',
   tokens: [{
     access: 'auth',
-    token: jwt.sign({_id: userTwoId, access: 'auth' }, process.env.JWT_SECRET).toString()
+    token: jwt.sign({ _id: userTwoId, access: 'auth' }, process.env.JWT_SECRET).toString()
   }]
 }];
 
@@ -47,7 +47,7 @@ const populateUsers = async () => {
 const populateTodos = async () => {
   await Todo.deleteMany({});
   await Todo.insertMany(todos);
-  
+
   // No need to return done() or Promise.resolve if using async-await
 };
 
@@ -56,4 +56,4 @@ module.exports = {
   populateTodos,
   users,
   populateUsers
-}
+};

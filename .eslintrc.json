@@ -1,0 +1,16 @@
+{
+    "extends": "standard",
+    "env": {
+        "mocha": true,
+        "node": true
+    },
+    "rules": {
+        "semi": [
+            2,
+            "always"
+        ],
+        "prefer-promise-reject-errors": "error",
+        "newline-after-var": "error",
+        "newline-before-return": "error"
+    }
+}
